@@ -2,20 +2,27 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
-import pool from '../src/db/connection';
+import sequelize from './db/sequelize';
+
+import './models'; // Initialiser les modèles
 
 
 const app = express();
 const port = 3001;
 
+const chatRoutes = require('./routes/chatRoutes');
+
 app.use(express.json());
+
+// Monter les routes
+app.use('/api/chat', chatRoutes);
 
 app.get('/', async (req, res) => {
     try {
-      const result = await pool.query('SELECT NOW()'); // Test simple
+      await sequelize.authenticate();
       res.json({
         message: 'Connexion réussie à la base de données !',
-        time: result.rows[0].now,
+        time: new Date().toISOString(),
       });
     } catch (error) {
       console.error('Erreur de connexion à la base de données :', error);
