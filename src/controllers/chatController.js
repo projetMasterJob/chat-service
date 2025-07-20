@@ -2,6 +2,7 @@ const { Chat, ListChat } = require('../models');
 
 // ─────────── Récupérer la liste des chats ───────────
 async function getListeChat(req, res) {
+  console.log('[GET] /list/:user_id', req.params.user_id);
   const { user_id } = req.params;
   try {
     const messages = await ListChat.findAll({ where: { user_id } });
