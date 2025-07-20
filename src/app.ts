@@ -30,6 +30,6 @@ app.get('/', async (req, res) => {
     }
   });
 
-app.listen(port, () => {
-  console.log(`Chat service listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Chat service listening at http://localhost:${port}`);
+// });
