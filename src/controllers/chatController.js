@@ -2,15 +2,16 @@ const { Chat, ListChat } = require('../models');
 
 // ─────────── Récupérer la liste des chats ───────────
 async function getListeChat(req, res) {
-  console.log('[GET] /list/:user_id', req.params.user_id);
-  const { user_id } = req.params;
-  try {
-    const messages = await ListChat.findAll({ where: { user_id } });
-    res.json(messages);
-  } catch (error) {
-    console.error('Erreur getListeChat :', error);
-    res.status(500).json({ error: 'Erreur interne du serveur' });
-  }
+  return res.json([{ id: 1, user_id: 123, company_id: 456 }]);
+  // console.log('[GET] /list/:user_id', req.params.user_id);
+  // const { user_id } = req.params;
+  // try {
+  //   const messages = await ListChat.findAll({ where: { user_id } });
+  //   res.json(messages);
+  // } catch (error) {
+  //   console.error('Erreur getListeChat :', error);
+  //   res.status(500).json({ error: 'Erreur interne du serveur' });
+  // }
 }
 
 // ─────────── Ajouter un chat à la liste ───────────
