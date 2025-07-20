@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 const sequelize = new Sequelize({
@@ -11,4 +11,4 @@ const sequelize = new Sequelize({
   logging: false,
 });
 
-export default sequelize; 
+module.exports = sequelize;

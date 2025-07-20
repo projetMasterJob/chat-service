@@ -1,4 +1,4 @@
-module.exports = (Sequelize: any, DataTypes: any) => {
+module.exports = (Sequelize, DataTypes) => {
     const Chat = Sequelize.define('Chat', {
       id: { type: DataTypes.UUIDV4, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
       chat_id: { type: DataTypes.UUIDV4, allowNull: false },

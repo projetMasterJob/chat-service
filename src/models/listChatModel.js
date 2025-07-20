@@ -1,4 +1,4 @@
-module.exports = (Sequelize: any, DataTypes: any) => {
+module.exports = (Sequelize, DataTypes) => {
     const listChat = Sequelize.define('listChat', {
       id: { type: DataTypes.UUIDV4, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
       user_id: { type: DataTypes.UUIDV4, allowNull: false },
