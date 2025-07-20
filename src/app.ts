@@ -31,4 +31,4 @@ app.use('/api/chat', chatRoutes);
 // });
 
 
-module.exports = app;
+export default app;

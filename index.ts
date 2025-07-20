@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+import app from './src/app';
+
 const db = require('./src/db/connection.ts');
 
 
