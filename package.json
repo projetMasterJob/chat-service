@@ -1,11 +1,11 @@
 {
   "name": "chat-service",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.ts",
   "scripts": {
-    "dev": "nodemon src/app.ts",
+    "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "node dist/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
