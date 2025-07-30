@@ -1,4 +1,8 @@
-const app = require('../src/app');
-const serverless = require('serverless-http');
+const express = require('express');
+const app = express();
 
-module.exports = serverless(app);
+app.get('/', (req, res) => {
+  res.send('Hello depuis Express sur Vercel !');
+});
+
+module.exports = app;
