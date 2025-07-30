@@ -8,7 +8,7 @@ const sequelize = new Sequelize({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   dialect: 'postgres',
-  logging: true, // ou true si tu veux voir les requêtes
+  logging: false, // ou true si tu veux voir les requêtes
 });
 
 module.exports = sequelize;
