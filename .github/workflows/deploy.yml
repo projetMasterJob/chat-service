@@ -35,7 +35,6 @@ jobs:
 
       - name: Security Audit
         run: npm audit --production
-        continue-on-error: true # Continue even if vulnerabilities are found
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
@@ -78,4 +77,3 @@ jobs:
     steps:
       - name: Notify build status
         run: echo "Build and deployment completed successfully!"
-        # Here you can add steps to send notifications to Slack, Email, etc.
