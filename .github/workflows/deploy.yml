@@ -1,13 +1,8 @@
-name: CI/CD Workflow
+name: CI/CD chat-service
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   build:
@@ -33,8 +28,8 @@ jobs:
         env:
           NODE_ENV: test
 
-      - name: Code Coverage
-        run: npm run coverage
+      - name: Jest Coverage
+        run: npx jest --coverage
         env:
           NODE_ENV: test
 
@@ -50,34 +45,35 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   if: github.ref == 'refs/heads/main' # Only deploy on main branch
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' # Only deploy on main branch
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '18' # Use the latest stable version for deployment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18' # Use the latest stable version for deployment
 
-  #     - name: Install dependencies
-  #       run: npm install --production
+      - name: Install dependencies
+        run: npm install --production
 
-  #     - name: Build application
-  #       run: npm run build
+      - name: Build application
+        run: npm run build
 
-  #     - name: Deploy to Vercel
-  #       uses: amondnet/vercel-action@v20
-  #       with:
-  #         vercel-token: ${{ secrets.VERCEL_DEPLOY }}
-  #         vercel-args: '--prod' # Deploy to production
-  #         working-directory: ./chat-service
-  #       env:
-  #         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  #         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          zeit-token: ${{ secrets.VERCEL_DEPLOY }}
+          vercel-token: ${{ secrets.VERCEL_DEPLOY }}
+          vercel-args: '--prod' # Deploy to production
+          working-directory: ./chat-service
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
   notify:
     runs-on: ubuntu-latest
