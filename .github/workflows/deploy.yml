@@ -4,35 +4,46 @@ on:
   push:
     branches: [main]
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
-    name: Build & Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Use Node.js 18
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install deps
-        run: npm ci
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run tests (with coverage)
-        run: npm test -- --coverage
+      - name: Run tests
+        run: npm test
         env:
           NODE_ENV: test
 
-      - name: Security audit (non-blocking)
-        run: npm audit --production || true
+      - name: Jest Coverage
+        run: npx jest --coverage
+        env:
+          NODE_ENV: test
+
+      - name: Security Audit
+        run: npm audit --production
+        continue-on-error: true # Continue even if vulnerabilities are found
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
   deploy:
     name: Deploy to Vercel (Production)
@@ -40,8 +51,6 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main'
 
-    # ⬇️ Si ton projet est dans un sous-dossier (ex: ./chat-service),
-    # ajoute "working-directory: ./chat-service" sur les 3 étapes vercel.
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,3 +71,11 @@ jobs:
 
       - name: Vercel Deploy (use prebuilt)
         run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_DEPLOY }}
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Notify build status
+        run: echo "Build and deployment completed successfully!"
+        # Here you can add steps to send notifications to Slack, Email, etc.
