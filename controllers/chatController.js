@@ -20,12 +20,21 @@ async function getListeChat(req, res) {
 async function postAddListeChat(req, res) {
   const { user_id, company_id } = req.body;
   try {
-    const id = uuidv4();
-    const { rows } = await pool.query(
-      'INSERT INTO chats (id, user_id, company_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *',
-      [id, user_id, company_id]
-    );
-    res.json(rows[0]);
+    //check Si le chat existe déjà
+  const { rows: existingChat } = await pool.query(
+    'SELECT * FROM chats WHERE user_id = $1 AND company_id = $2',
+    [user_id, company_id]
+  );
+    if (existingChat.length > 0) {
+      return res.status(200).json({ error: 'Chat déjà existant' });
+    }else{
+      const id = uuidv4();
+      const { rows } = await pool.query(
+        'INSERT INTO chats (id, user_id, company_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *',
+        [id, user_id, company_id]
+      );
+      res.json(rows[0]).status(201);
+    }  
   } catch (error) {
     console.error('Erreur postAddListeChat :', error);
     res.status(500).json({ error: 'Erreur interne du serveur' });
@@ -56,7 +65,7 @@ async function sendMessage(req, res) {
       'INSERT INTO messages (id, chat_id, sender_id, content, sent_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
       [id, chat_id, sender_id, content]
     );
-    res.json(rows[0]);
+    res.json(rows[0]).status(201);
   } catch (error) {
     console.error('Erreur sendMessage :', error);
     res.status(500).json({ error: 'Erreur interne du serveur' });
