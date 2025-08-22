@@ -26,7 +26,7 @@ async function postAddListeChat(req, res) {
     [user_id, company_id]
   );
     if (existingChat.length > 0) {
-      return res.status(200).json({ error: 'Chat déjà existant', chat_id : existingChat.id });
+      return res.status(200).json({ error: 'Chat déjà existant', chat_id : 'test' });
     }else{
       const id = uuidv4();
       const { rows } = await pool.query(
